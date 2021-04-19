@@ -4,13 +4,25 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
          version="3.0">
     <display-name>Archetype Created Web Application</display-name>
-
-    <servlet>
-        <servlet-name>FirstServlet</servlet-name>
-        <servlet-class>by.akimova.servlets.FirstServlet</servlet-class>
-    </servlet>
+    <!-- Index page -->
     <servlet-mapping>
-        <servlet-name>FirstServlet</servlet-name>
+        <servlet-name>GetStartPageServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>GetStartPageServlet</servlet-name>
+        <servlet-class>by.akimova.servlets.GetIndexPageServlet</servlet-class>
+    </servlet>
+
+    <!--Add user -->
+    <servlet-mapping>
+        <servlet-name>AddUserServlet</servlet-name>
+        <url-pattern>/add_user</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AddUserServlet</servlet-name>
+        <servlet-class>by.akimova.servlets.AddUserServlet</servlet-class>
+    </servlet>
+
+
 </web-app>

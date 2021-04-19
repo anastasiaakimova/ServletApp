@@ -10,19 +10,24 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @WebServlet("/hello")
-public class FirstServlet extends HttpServlet {
+public class GetIndexPageServlet extends HttpServlet {
 
     private static final String index = "/WEB-INF/view/index.jsp";
-    private List<User> users;
+    private Map<Integer, User> users;
 
     @Override
     public void init() throws ServletException {
-        users = new CopyOnWriteArrayList<>();
-        users.add(new User("Java", 10));
-        users.add(new User("Vision", 20));
+        final Object users = getServletContext().getAttribute("users");
+        if(users == null || !(users instanceof ConcurrentHashMap)){
+            throw new IllegalStateException("Your repo does not initialize!");
+        } else {
+            this.users = (ConcurrentHashMap<Integer, User>) users;
+        }
         System.out.println("Servlet is init");
     }
 
@@ -30,30 +35,13 @@ public class FirstServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        req.setAttribute("users", users);
+
+        req.setAttribute("users", users.values());
         req.getRequestDispatcher(index).forward(req, resp);
         System.out.println("doGet is working");
     }
 
-    // получение данных с формы
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        req.setCharacterEncoding("UTF8");
-        if (!requestIsValid(req)) {
-            doGet(req, resp);
 
-        }
-
-        final String name = req.getParameter("name");
-        final String age = req.getParameter("age");
-        final User user = new User(name, Integer.valueOf(age));
-
-        users.add(user);
-        doGet(req, resp);
-
-        System.out.println("doPost is working");
-    }
 
     private boolean requestIsValid(final HttpServletRequest req) {
         final String name = req.getParameter("name");
